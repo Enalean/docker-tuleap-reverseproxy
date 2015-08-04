@@ -8,11 +8,19 @@ RUN yum update -y && \
     yum install -y nginx16 && \
     yum clean all
 
+
+RUN mkdir -p /opt/rh/nginx16/root/etc/nginx/ssl && \
+    openssl genrsa -out /opt/rh/nginx16/root/etc/nginx/ssl/server.key 1024  && \
+    openssl req -new -subj "/C=FR/ST=Denial/L=Springfield/O=Dis/CN=*" -key /opt/rh/nginx16/root/etc/nginx/ssl/server.key -out /opt/rh/nginx16/root/etc/nginx/ssl/server.csr  && \
+    openssl x509 -req -days 365 -in /opt/rh/nginx16/root/etc/nginx/ssl/server.csr -signkey /opt/rh/nginx16/root/etc/nginx/ssl/server.key -out /opt/rh/nginx16/root/etc/nginx/ssl/server.crt
+
+RUN yum install -y epel-release && yum install -y install inotify-tools
+
 COPY . /root
 COPY nginx/nginx.conf /opt/rh/nginx16/root/etc/nginx/nginx.conf
 
 EXPOSE 443
 
-VOLUME /data
+VOLUME /reverseproxy_data
 
 CMD "/root/run.sh"
