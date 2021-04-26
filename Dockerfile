@@ -6,6 +6,6 @@ COPY *.repo /etc/yum.repos.d/
 RUN yum update -y && \
     yum install -y epel-release centos-release-scl && \
     yum install -y nginx \
-        php73-php-cli \
-        php73-php-process && \
+        php74-php-cli \
+        php74-php-process && \
     yum clean all
